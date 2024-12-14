@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Input Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 400px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .tooltip {
+            position: absolute;
+            top: 50%;
+            left: calc(100% + 5px);
+            transform: translateY(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            display: none;
+            white-space: nowrap;
+            z-index: 1;
+        }
+        .tooltip-icon {
+            position: relative;
+            cursor: pointer;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .tooltip-icon:hover .tooltip {
+            display: block;
+        }
+        .output {
+            margin-top: 20px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <h1>User Input Form</h1>
+    <form id="userForm">
+        <div class="form-group">
+            <label for="input1">Enter your Project Budget ($): <span class="tooltip-icon">&#9432;<span class="tooltip">Project Budget is the total budget allocated for this project.</span></span></label>
+            <input type="text" id="input1" name="input1" required>
+        </div>
+        <div class="form-group">
+            <label for="input2">Enter your Actual Costs ($): <span class="tooltip-icon">&#9432;<span class="tooltip">Actual Costs describe the amount of money spent so far on the project.</span></span></label>
+            <input type="text" id="input2" name="input2" required>
+        </div>
+        <div class="form-group">
+            <label for="input3">Enter your Actual Progress (%): <span class="tooltip-icon">&#9432;<span class="tooltip">Actual Progress is a percentage describing how much progress has been made so far on the project.</span></span></label>
+            <input type="text" id="input3" name="input3" required>
+        </div>
+        <div class="form-group">
+            <label for="input4">Enter your Scheduled Progress (%): <span class="tooltip-icon">&#9432;<span class="tooltip">Scheduled Progress is a percentage describing how much progress \n should have been completed on the project at this point in time.</span></span></label>
+            <input type="text" id="input4" name="input4" required>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div class="output" id="output">
+        <span class="tooltip-icon">&#9432;<span class="tooltip">The results of your submission will appear here.</span></span>
+    </div>
+    <button id="downloadButton" style="display: none; margin-top: 20px;">Download as TXT</button>
+
+    <script>
+        document.getElementById('userForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from refreshing the page
+
+            // Get user inputs
+            const input1 = document.getElementById('input1').value;
+            const input2 = document.getElementById('input2').value;
+            const input3 = document.getElementById('input3').value;
+            const input4 = document.getElementById('input4').value;
+
+            plannedValue = input1 * input4;
+
+            // Display the inputs
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = `
+                <h2>Calculated Data:</h2>
+                <p><strong>Planned Value:</strong> ${plannedValue}</p>
+                <p><strong>Input 2:</strong> ${input2}</p>
+                <p><strong>Input 3:</strong> ${input3}</p>
+                <p><strong>Input 4:</strong> ${input4}</p>
+            `;
+
+            // Show the download button
+            const downloadButton = document.getElementById('downloadButton');
+            downloadButton.style.display = 'inline-block';
+
+            // Prepare the content for the TXT file
+            const fileContent = `Input 1: ${input1}\nInput 2: ${input2}\nInput 3: ${input3}\nInput 4: ${input4}`;
+
+            // Add event listener for download button
+            downloadButton.addEventListener('click', function() {
+                const blob = new Blob([fileContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'user_data.txt';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        });
+    </script>
+</body>
+</html>
